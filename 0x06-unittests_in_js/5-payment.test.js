@@ -1,31 +1,35 @@
-const chai = require('chai');
-const expect = chai.expect;
-
-const sinon = require('sinon');
+const Utils = require('./utils');
 const sendPaymentRequestToApi = require('./5-payment');
+const expect = require('chai').expect;
+const sinon = require('sinon');
 
-describe('sendPaymentRequestToApi', () => {
-  let consolespy;
+describe('sendPaymentRequestToApi', function() {
+  let calculateNumberOriginal;
+  let consoleLogOriginal;
 
-  beforeEach(() => {
-    consolespy = sinon.spy(console, 'log');
-  });
-  afterEach(() => {
-    consolespy.restore();
-  });
+  this.beforeEach(function() {
+    calculateNumberOriginal = Utils.calculateNumber;
+    consoleLogOriginal = console.log;
+  })
 
-  it('test the send Pyament Request with 100, 20', () => {
+  this.afterEach(function() {
+    Utils.calculateNumber = calculateNumberOriginal;
+    console.log = consoleLogOriginal;
+  })
+
+  it('validate called with 100 and 20', function () {
+    Utils.calculateNumber = sinon.spy();
+    console.log = sinon.spy();
     sendPaymentRequestToApi(100, 20);
+    expect(Utils.calculateNumber.calledOnceWithExactly('SUM', 100, 20)).to.be.true;
+    expect(console.log.calledOnce).to.be.true;
+  })
 
-    expect(consolespy.calledWithExactly('The total is: 120')).to.be.true;
-    expect(consolespy.CalledOnce);
-  });
-
-  it('test the send Pyament Request with 10, 10', () => {
+  it('validate called with 10 and 10', function () {
+    Utils.calculateNumber = sinon.spy();
+    console.log = sinon.spy();
     sendPaymentRequestToApi(10, 10);
-
-    expect(consolespy.calledOnceWithExactly('The total is: 20')).to.be.true;
-    expect(consolespy.CalledOnce);
-  });
-
-});
+    expect(Utils.calculateNumber.calledOnceWithExactly('SUM', 10, 10)).to.be.true;
+    expect(console.log.calledOnce).to.be.true;
+  })
+})

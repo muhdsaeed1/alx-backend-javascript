@@ -1,14 +1,14 @@
-const chai = require('chai');
-const expect = chai.expect;
+const { expect } = require('chai');
 const request = require('request');
 
-describe('test the API', () => {
-  it('test the API with status, body', (done) => {
-    request('http://localhost:7865', 'GET', (er, rs, bd) => {
-      if (er) throw er;
-      expect(rs.statusCode).to.equal(200);
-      expect(bd).to.equal('Welcome to the payment system');
-    });
-    done();
-  });
-});
+const URL = 'http://localhost:7865/';
+
+describe('api.js', function() {
+  it('Tests the response of API', function(done) {
+    request(URL, (err, res, body) => {
+      expect(res.statusCode).to.equal(200);
+      expect(body).to.equal('Welcome to the payment system');
+      done();
+    })
+  })
+})
